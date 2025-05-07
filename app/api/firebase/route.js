@@ -1,5 +1,5 @@
 import { getFirestore, collection, doc, setDoc } from "firebase/firestore";
-import app from "../../../firebase";
+import app from "../../../firebase/firebase";
 import { NextResponse } from "next/server";
 
 const firestore = getFirestore(app);
