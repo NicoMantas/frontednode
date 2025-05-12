@@ -1,8 +1,25 @@
+'use client';
+import Link from "next/link";
+import { useAuthContext } from "./context/AuthContext";
+import signOutUser from "../firebase/auth/signout";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 
 export default function Home() {
+  const { user } = useAuthContext();
+  const router = useRouter();
+
+  const handleSignOut = async () => {
+      const { error } = await signOutUser();
+      if (!error) {
+          router.push("/");
+      } else {
+          console.error("Error al cerrar sesión:", error);
+      }
+  };
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
+    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)] bg-blue-500">
       <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
         <Image
           className="dark:invert"
@@ -15,7 +32,7 @@ export default function Home() {
         <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
           <li className="mb-2 tracking-[-.01em]">
             Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
+            <code className="bg-blue-400/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
               src/app/page.js
             </code>
             .
@@ -98,6 +115,22 @@ export default function Home() {
           Go to nextjs.org →
         </a>
       </footer>
+      {user ? (
+                    <div className="flex gap-2 mt-4">
+                        <button 
+                            onClick={handleSignOut}
+                            className="px-6 py-2 rounded-full bg-gray-300 text-gray-700 font-bold shadow"
+                        >
+                            Cerrar sesión
+                        </button>
+                    </div>
+                ) : (
+                    <Link href="/signin">
+                        <button className="px-6 py-2 rounded-full bg-[#ffe6a0] text-[#8B2C3B] font-bold shadow mt-4">
+                            Iniciar sesión
+                        </button>
+                    </Link>
+                )}
     </div>
   );
 }
